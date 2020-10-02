@@ -1,4 +1,4 @@
-# init-project
+# layout-project
 Create a project with initialization files
 
 1. Add some common initialization folders.
