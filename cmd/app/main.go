@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"layou-item/configs"
-	"layou-item/tools"
+	"layout-item/configs"
+	"layout-item/pkg/logger"
 	"log"
 	"os"
 	"os/signal"
@@ -16,23 +16,20 @@ var (
 	Version string
 )
 
-var (
-	logger *zap.Logger       // 全局logger
-	cfg    = &configs.Base{} // 全局配置
-)
-
 func main() {
 	log.Println("version:", Version)
-
-	err := configs.LoadConfing(cfg, "", "")
+	err := configs.LoadConfing("", "")
 	if err != nil {
 		panic("加载配置文件失败" + err.Error())
 	}
+	cfg := configs.GetConfig()
 
-	loggerConf := tools.Conf{}.DefaultConf()
-	logger = tools.NewLogger(&loggerConf, "live")
+	loggerConf := logger.Conf{}.DefaultConf()
+	logger.NewLogger(&loggerConf, "live") // 初始化日志器
 
-	logger.Info("读取配置参数测试", zap.Uint("端口", cfg.HTTP.Port))
+	logger.Logger.Info("读取配置参数测试", zap.Uint("端口", cfg.HTTP.Port))
+
+	//db.Init(cfg) // 初始化db
 
 	fmt.Println("hello,world!")
 

@@ -1,3 +1,14 @@
 http:
   port: 8081    # http端口
   pprofPort: 9001   # pprof端口
+
+mysql:
+  addr: "localhost:3306"  # 地址
+  user: "root"  # 用户
+  pass: "123456"  # 密码
+  db: "test"    # 数据库
+
+redis:
+  addr: "localhost:6379" # 地址
+  pass: "123"           # 密码
+  db: 0   # 数据库名

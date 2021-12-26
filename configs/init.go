@@ -17,6 +17,13 @@ var (
 	configNames = []string{"custom", "test", "production"}
 )
 
+var config *BaseConfig
+
+// GetConfig 获取配置
+func GetConfig() *BaseConfig {
+	return config
+}
+
 /** LoadConfing 加载解析配置
   参数:
   *       conf            interface{}	反序列化对象,必须为非空指针
@@ -25,8 +32,9 @@ var (
   返回值:
   *       error   error
 */
-func LoadConfing(conf interface{}, dir, fileName string) error {
-	if err := mustNotNilPtr(conf); err != nil {
+func LoadConfing(dir, fileName string) error {
+	cfg := &BaseConfig{}
+	if err := mustNotNilPtr(cfg); err != nil {
 		return err
 	}
 
@@ -64,9 +72,11 @@ func LoadConfing(conf interface{}, dir, fileName string) error {
 		return err
 	}
 
-	if err := v.Unmarshal(conf); err != nil {
+	if err := v.Unmarshal(cfg); err != nil {
 		return err
 	}
+
+	config = cfg
 
 	return nil
 }
