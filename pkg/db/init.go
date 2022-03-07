@@ -4,7 +4,7 @@ import (
 	"layout-item/configs"
 
 	"github.com/go-redis/redis"
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 var (
