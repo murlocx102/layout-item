@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"layout-item/configs"
-	"layout-item/pkg/logger"
+	"layout-item/infrastructure/logger"
 	"log"
 	"os"
 	"os/signal"
