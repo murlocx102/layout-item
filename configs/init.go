@@ -32,7 +32,7 @@ func GetConfig() *BaseConfig {
   返回值:
   *       error   error
 */
-func LoadConfing(dir, fileName string) error {
+func LoadConfig(dir, fileName string) error {
 	cfg := &BaseConfig{}
 	if err := mustNotNilPtr(cfg); err != nil {
 		return err

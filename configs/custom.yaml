@@ -1,14 +1,33 @@
-http:
-  port: 8081    # http端口
-  pprofPort: 9001   # pprof端口
+merchantHTTP:
+  addr: "127.0.0.1"  # 地址
+  port: 10099    # http端口
+  pprofPort: 10091   # pprof端口
+
+userRPC:
+  addr: "127.0.0.1"  # 地址
+  port: 9000    # 端口
 
 mysql:
-  addr: "localhost:3306"  # 地址
-  user: "root"  # 用户
-  pass: "123456"  # 密码
-  db: "test"    # 数据库
+   addr: "192.168.6.200:3306"  # 地址
+   user: "root"  # 用户
+   pass: "bingtangMySQL"  # 密码
+   db: "live"    # 数据库
+   slog: true # 默认:false仅控制台显示,true则记录日志
 
 redis:
-  addr: "localhost:6379" # 地址
-  pass: "123"           # 密码
-  db: 0   # 数据库名
+  addr: "192.168.6.213:6379" # 地址
+  pass: ""           # 密码
+  db: 3   # 数据库名
+
+nats:
+  addr: "192.168.6.213:4222" #地址
+  pass: ""   #密码
+
+token:
+  # app端
+  liveTokenSecret: "this-is-token-secret"
+  liveSessionKey: "live_session"
+  liveSessionSecret: "this_is_live_session_secret"
+  liveTokenStringKey: "live_token_string"
+  liveExpireTime: 360
+

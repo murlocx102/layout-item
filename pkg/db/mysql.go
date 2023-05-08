@@ -3,6 +3,7 @@ package db
 import (
 	"fmt"
 	"layout-item/pkg/logger"
+	"strings"
 	"time"
 
 	"gorm.io/driver/mysql"
@@ -11,8 +12,15 @@ import (
 	"gorm.io/gorm/schema"
 )
 
+type GormModel struct {
+	ID        int64          `gorm:"primarykey"`
+	CreatedAt time.Time      `gorm:"autoCreateTime:milli"`
+	UpdatedAt time.Time      `gorm:"autoUpdateTime:milli"`
+	DeletedAt gorm.DeletedAt `gorm:"index"`
+}
+
 // InitMysqlDB 初始化mysql数据库
-func InitMysqlDB(user, pass, addr, db string, slog bool) {
+func InitMysqlDB(user, pass, addr, db string, slog bool) *gorm.DB {
 	logger.Logger.Info("init mysql")
 
 	connString := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=true", user, pass, addr, db)
@@ -35,7 +43,7 @@ func InitMysqlDB(user, pass, addr, db string, slog bool) {
 		)
 	}
 
-	DB, err = gorm.Open(mysql.Open(connString), &gorm.Config{
+	conn, err := gorm.Open(mysql.Open(connString), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		},
@@ -47,15 +55,7 @@ func InitMysqlDB(user, pass, addr, db string, slog bool) {
 
 	logger.Logger.Info("init mysql ok")
 
-	return
-}
-
-// 初始模型
-type GormModel struct {
-	ID        int64          `gorm:"primarykey"`
-	CreatedAt int64          `gorm:"autoCreateTime"` // 使用时间戳(秒),避免时区存储问题(time会存储时区) // autoUpdateTime:nano 存储纳秒 :milli 存储毫秒
-	UpdatedAt int64          `gorm:"autoUpdateTime"`
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	return conn
 }
 
 // Pagination 分页
@@ -69,6 +69,31 @@ func Pagination(page, limit uint32) func(db *gorm.DB) *gorm.DB {
 	}
 
 	return func(db *gorm.DB) *gorm.DB {
+		return db
+	}
+}
+
+// Order slice可多条件 []map[SortField]SortMode  SortMode: "desc","2"表示倒序
+func Order(sortElems []map[string]string) func(db *gorm.DB) *gorm.DB {
+	if len(sortElems) == 0 {
+		return func(db *gorm.DB) *gorm.DB {
+			return db
+		}
+	}
+
+	return func(db *gorm.DB) *gorm.DB {
+		for _, elems := range sortElems {
+			for key, value := range elems {
+				switch value {
+				case "desc":
+					db = db.Order(strings.Join([]string{key, "DESC"}, " "))
+				case "2": // "1":正序 "2":倒序
+					db = db.Order(strings.Join([]string{key, "DESC"}, " "))
+				default:
+					db = db.Order(strings.Join([]string{key, "ASC"}, " "))
+				}
+			}
+		}
 		return db
 	}
 }

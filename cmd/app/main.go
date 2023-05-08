@@ -18,16 +18,16 @@ var (
 
 func main() {
 	log.Println("version:", Version)
-	err := configs.LoadConfing("", "")
+	err := configs.LoadConfig("", "")
 	if err != nil {
 		panic("加载配置文件失败" + err.Error())
 	}
 	cfg := configs.GetConfig()
 
 	loggerConf := logger.Conf{}.DefaultConf()
-	logger.NewLogger(&loggerConf, "live") // 初始化日志器
+	logger.NewLogger(&loggerConf, "merchant") // 初始化日志器
 
-	logger.Logger.Info("读取配置参数测试", zap.Uint("端口", cfg.HTTP.Port))
+	logger.Logger.Info("读取配置参数测试", zap.Any("配置", cfg))
 
 	//db.Init(cfg) // 初始化db
 
