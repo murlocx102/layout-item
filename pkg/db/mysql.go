@@ -23,7 +23,7 @@ type GormModel struct {
 func InitMysqlDB(user, pass, addr, db string, slog bool) *gorm.DB {
 	logger.Logger.Info("init mysql")
 
-	connString := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=true", user, pass, addr, db)
+	connString := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=true&loc=Local", user, pass, addr, db) // 使用本地时区(loc=Local)
 
 	var err error
 	var newLogger gormlogger.Interface
